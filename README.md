@@ -1,6 +1,7 @@
 # optimizer-visualization
 Visualize loss minimization techniques in Tensorflow.
 
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/visuals/movie2.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/visuals/movie.gif)
 
 #### AdadeltaOptimizer(learning_rate=50):

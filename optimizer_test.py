@@ -12,37 +12,21 @@ def f(x, y):
 
 
 plt.ion()
-# plt.figure(figsize=(3, 2), dpi=300)
-# params = {'legend.fontsize': 4,
-#           'legend.handlelength': 4}
-# plt.rcParams.update(params)
+plt.figure(figsize=(3, 2), dpi=300)
+params = {'legend.fontsize': 4,
+          'legend.handlelength': 4}
+plt.rcParams.update(params)
 plt.axis('off')
-plt.tight_layout()
 
-x = np.arange(-1.5, 1.5, 0.03)
-y = np.arange(-1.5, 1.5, 0.03)
-x_in = np.array([elem_x for elem_x in x for elem_y in y])
-y_in = np.array([elem_y for elem_x in x for elem_y in y])
-z = f(x_in, y_in)
+x = np.arange(-1.5, 1.5, 0.05)
+y = np.arange(-1.0, 1.0, 0.05)
+X, Y = np.meshgrid(x, y)
+z = f(X, Y)
 
 with tf.Session() as sess:
-    output = sess.run(z)
+    Z = sess.run(z)
 
-    index = 0
-    for x_val in x:
-        for y_val in y:
-            if -1.2 < output[index] < -1.1:
-                plt.scatter(x_val, y_val, color=(0.1, 0.1, 0.5, 1.0), s=0.7)
-            elif -0.9 < output[index] < -0.8:
-                plt.scatter(x_val, y_val, color=(0.1, 0.1, 0.5, 0.8), s=0.7)
-            elif -0.6 < output[index] < -0.5:
-                plt.scatter(x_val, y_val, color=(0.1, 0.1, 0.5, 0.6), s=0.7)
-            elif -0.3 < output[index] < -0.2:
-                plt.scatter(x_val, y_val, color=(0.1, 0.1, 0.5, 0.4), s=0.7)
-            elif 0.0 < output[index] < 0.1:
-                plt.scatter(x_val, y_val, color=(0.1, 0.1, 0.5, 0.2), s=0.7)
-            index += 1
-
+plt.contour(X, Y, Z)
 plt.draw()
 
 x_i = 0.5
@@ -60,12 +44,12 @@ for i in range(7):
 
 ops = []
 ops.append(tf.train.AdadeltaOptimizer(20).minimize(cost[0]))
-ops.append(tf.train.AdagradOptimizer(0.03).minimize(cost[1]))
+ops.append(tf.train.AdagradOptimizer(0.05).minimize(cost[1]))
 ops.append(tf.train.AdamOptimizer(0.01).minimize(cost[2]))
-ops.append(tf.train.FtrlOptimizer(0.01).minimize(cost[3]))
-ops.append(tf.train.GradientDescentOptimizer(0.01).minimize(cost[4]))
-ops.append(tf.train.MomentumOptimizer(0.01, 0.9).minimize(cost[5]))
-ops.append(tf.train.RMSPropOptimizer(0.01).minimize(cost[6]))
+ops.append(tf.train.FtrlOptimizer(0.05).minimize(cost[3]))
+ops.append(tf.train.GradientDescentOptimizer(0.05).minimize(cost[4]))
+ops.append(tf.train.MomentumOptimizer(0.01, 0.95).minimize(cost[5]))
+ops.append(tf.train.RMSPropOptimizer(0.03).minimize(cost[6]))
 
 ops_label = ["Adadelta",
              "Adagrad",
@@ -93,14 +77,16 @@ with tf.Session() as sess:
 
             if last_point[i]:
                 last_point[i].remove()
-            last_point[i] = plt.scatter(x_val, y_val, color=colors[i], s=20, label=ops_label[i])
+            last_point[i] = plt.scatter(x_val, y_val, color=colors[i], s=3, label=ops_label[i])
 
             if last_x[i] and last_y[i]:
-                plt.plot([last_x[i], x_val], [last_y[i], y_val], color=colors[i])
+                plt.plot([last_x[i], x_val], [last_y[i], y_val], color=colors[i], linewidth=0.5)
             last_x[i] = x_val
             last_y[i] = y_val
 
-        plt.legend(last_point, ops_label, prop={'size': 7})
-        plt.savefig(str(iter) + '.png')
+        plt.legend(last_point, ops_label)  # , prop={'size': 7})
+        plt.savefig("op_figs/" + str(iter) + '.png')
+        print(iter)
+        plt.pause(0.001)
 
 print("done")
