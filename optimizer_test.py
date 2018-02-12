@@ -13,13 +13,13 @@ def f(x, y):
 
 plt.ion()
 plt.figure(figsize=(3, 2), dpi=300)
-params = {'legend.fontsize': 4,
-          'legend.handlelength': 4}
+params = {'legend.fontsize': 3,
+          'legend.handlelength': 3}
 plt.rcParams.update(params)
 plt.axis('off')
 
-x = np.arange(-1.5, 1.5, 0.05)
-y = np.arange(-1.0, 1.0, 0.05)
+x = np.arange(-1.5, 1.5, 0.01)
+y = np.arange(-1.5, 1.5, 0.01)
 X, Y = np.meshgrid(x, y)
 z = f(X, Y)
 
@@ -29,8 +29,8 @@ with tf.Session() as sess:
 plt.contour(X, Y, Z)
 plt.draw()
 
-x_i = 0.5
-y_i = 0.75
+x_i = 0.75
+y_i = 1.0
 
 x_var = []
 y_var = []
@@ -44,8 +44,8 @@ for i in range(7):
 
 ops = []
 ops.append(tf.train.AdadeltaOptimizer(20).minimize(cost[0]))
-ops.append(tf.train.AdagradOptimizer(0.05).minimize(cost[1]))
-ops.append(tf.train.AdamOptimizer(0.01).minimize(cost[2]))
+ops.append(tf.train.AdagradOptimizer(0.10).minimize(cost[1]))
+ops.append(tf.train.AdamOptimizer(0.05).minimize(cost[2]))
 ops.append(tf.train.FtrlOptimizer(0.05).minimize(cost[3]))
 ops.append(tf.train.GradientDescentOptimizer(0.05).minimize(cost[4]))
 ops.append(tf.train.MomentumOptimizer(0.01, 0.95).minimize(cost[5]))
