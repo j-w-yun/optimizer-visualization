@@ -4,7 +4,7 @@ import tensorflow as tf
 
 
 # cost function
-def f(x=None, y=None):
+def cost_func(x=None, y=None):
     '''Cost function.
     For visualizing contour plot, call f() and collect placeholder nodes.
     To incorporate variables to optimize, pass them in as argument to attach as x and y.
@@ -14,21 +14,29 @@ def f(x=None, y=None):
     if not y:
         y = tf.placeholder(tf.float32, shape=[None, 1])
 
-    z = -1 * tf.sin(x * x) * tf.cos(3 * y * y) * tf.exp(-(x * y) * (x * y)) - tf.exp(-(x + y) * (x + y))
+    # two local minima near (0, 0)
+    z = __f1(x, y)
 
-    x_sig = 0.35
-    y_sig = 0.35
-    x_mean = -0.5
-    y_mean = -0.8
+    # 3rd local minimum at (-0.5, -0.8)
+    z -= __f2(x, y, x_mean=-0.5, y_mean=-0.8, x_sig=0.35, y_sig=0.35)
 
+    # steep gaussian at (0, 0)
+    z -= __f2(x, y, x_mean=0, y_mean=0, x_sig=0.2, y_sig=0.2)
+
+    return x, y, z
+
+
+# hills and bumps of the cost function
+def __f1(x, y):
+    return -1 * tf.sin(x * x) * tf.cos(3 * y * y) * tf.exp(-(x * y) * (x * y)) - tf.exp(-(x + y) * (x + y))
+
+
+# bivar gaussian
+def __f2(x, y, x_mean, y_mean, x_sig, y_sig):
     normalizing = 1 / (2 * np.pi * x_sig * y_sig)
     x_exp = (-1 * tf.square(x - x_mean)) / (2 * tf.square(x_sig))
     y_exp = (-1 * tf.square(y - y_mean)) / (2 * tf.square(y_sig))
-    local_min = -1 * normalizing * tf.exp(x_exp + y_exp)
-
-    z += local_min
-
-    return x, y, z
+    return normalizing * tf.exp(x_exp + y_exp)
 
 
 # pyplot settings
@@ -41,17 +49,17 @@ plt.rcParams.update(params)
 plt.axis('off')
 
 # input (x, y) and output (z) nodes of cost-function graph
-x, y, z = f()
+x, y, z = cost_func()
 
 # visualize cost function as a contour plot
-x_val = y_val = np.arange(-1.7, 1.7, 0.005, dtype=np.float32)
+x_val = y_val = np.arange(-1.5, 1.5, 0.005, dtype=np.float32)
 x_val_mesh, y_val_mesh = np.meshgrid(x_val, y_val)
 x_val_mesh_flat = x_val_mesh.reshape([-1, 1])
 y_val_mesh_flat = y_val_mesh.reshape([-1, 1])
 with tf.Session() as sess:
     z_val_mesh_flat = sess.run(z, feed_dict={x: x_val_mesh_flat, y: y_val_mesh_flat})
 z_val_mesh = z_val_mesh_flat.reshape(x_val_mesh.shape)
-levels = np.arange(-4, 1, 0.05)
+levels = np.arange(-10, 1, 0.05)
 plt.contour(x_val_mesh, y_val_mesh, z_val_mesh, levels, alpha=.7, linewidths=0.4)
 plt.draw()
 
@@ -60,8 +68,7 @@ x_i = 0.75
 y_i = 1.0
 
 # create variable pair (x, y) for each optimizer
-x_var = []
-y_var = []
+x_var, y_var = [], []
 for i in range(7):
     x_var.append(tf.Variable(x_i, [1], dtype=tf.float32))
     y_var.append(tf.Variable(y_i, [1], dtype=tf.float32))
@@ -69,10 +76,10 @@ for i in range(7):
 # create separate graph for each variable pairs
 cost = []
 for i in range(7):
-    cost.append(f(x_var[i], y_var[i])[2])
+    cost.append(cost_func(x_var[i], y_var[i])[2])
 
 # define method of gradient descent for each graph
-ops_param = [['Adadelta', 10.0],
+ops_param = [['Adadelta', 50],
              ['Adagrad', 0.10],
              ['Adam', 0.05],
              ['Ftrl', 0.05],
@@ -101,7 +108,7 @@ with tf.Session() as sess:
         last_point.append(None)
 
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
-    for iter in range(300):
+    for iter in range(1000):
         for i, op in enumerate(ops):
             _, x_val, y_val = sess.run([op, x_var[i], y_var[i]])
 
