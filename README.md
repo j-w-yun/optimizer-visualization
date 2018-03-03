@@ -1,9 +1,39 @@
 # optimizer-visualization
-Visualize loss minimization techniques in Tensorflow.
 
+## Visualize gradient descent optimization algorithms in Tensorflow.
+
+For an overview of each gradient descent optimization algorithm, [visit this helpful resource](http://ruder.io/optimizing-gradient-descent/).
+
+All methods start at the same location, specified by two variables. Both x and y variables are improved by the following Optimizers:
+
+[Adadelta documentation](https://www.tensorflow.org/api_docs/python/tf/train/AdadeltaOptimizer)
+
+[Adagrad documentation](https://www.tensorflow.org/api_docs/python/tf/train/AdagradOptimizer)
+
+[Adam documentation](https://www.tensorflow.org/api_docs/python/tf/train/AdamOptimizer)
+
+[Ftrl documentation](https://www.tensorflow.org/api_docs/python/tf/train/FtrlOptimizer)
+
+[GD documentation](https://www.tensorflow.org/api_docs/python/tf/train/GradientDescentOptimizer)
+
+[Momentum documentation](https://www.tensorflow.org/api_docs/python/tf/train/MomentumOptimizer)
+
+[RMSProp documentation](https://www.tensorflow.org/api_docs/python/tf/train/RMSPropOptimizer)
+
+For an overview of each gradient descent optimization algorithms, visit [this helpful resource](http://ruder.io/optimizing-gradient-descent/).
+
+#### Numbers in figure legend indicate learning rate, specific to each Optimizer.
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie5.gif)
+
+#### A sharp gaussian depression at x=0, y=0. Note the optimizers' behavior when gradient is steep.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie6.gif)
+
+## Additional Figures
+
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie3.gif)
+
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie2.gif)
+
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie.gif)
 
 #### AdadeltaOptimizer(learning_rate=50):
@@ -56,7 +86,8 @@ Visualize loss minimization techniques in Tensorflow.
 #### RMSPropOptimizer(learning_rate=0.5)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/RMSPropOp.png)
 
-#### Inspired by the following GIFs I found on the web:
 
+
+#### Inspired by the following GIFs I found on the web:
 ![](https://i.stack.imgur.com/qAx2i.gif)
 ![](https://i.stack.imgur.com/1obtV.gif)
