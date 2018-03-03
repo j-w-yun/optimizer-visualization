@@ -1,7 +1,7 @@
 # optimizer-visualization
 Visualize loss minimization techniques in Tensorflow.
 
-![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie4.gif)
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie5.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie3.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie2.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie.gif)
