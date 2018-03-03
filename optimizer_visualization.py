@@ -16,8 +16,8 @@ def f(x=None, y=None):
 
     z = -1 * tf.sin(x * x) * tf.cos(3 * y * y) * tf.exp(-(x * y) * (x * y)) - tf.exp(-(x + y) * (x + y))
 
-    x_sig = 0.33
-    y_sig = 0.33
+    x_sig = 0.35
+    y_sig = 0.35
     x_mean = -0.5
     y_mean = -0.8
 
@@ -51,8 +51,8 @@ y_val_mesh_flat = y_val_mesh.reshape([-1, 1])
 with tf.Session() as sess:
     z_val_mesh_flat = sess.run(z, feed_dict={x: x_val_mesh_flat, y: y_val_mesh_flat})
 z_val_mesh = z_val_mesh_flat.reshape(x_val_mesh.shape)
-levels = np.arange(-3, 1, 0.05)
-plt.contour(x_val_mesh, y_val_mesh, z_val_mesh, levels, alpha=.5)
+levels = np.arange(-4, 1, 0.05)
+plt.contour(x_val_mesh, y_val_mesh, z_val_mesh, levels, alpha=.7, linewidths=0.4)
 plt.draw()
 
 # starting location for variables
@@ -72,22 +72,22 @@ for i in range(7):
     cost.append(f(x_var[i], y_var[i])[2])
 
 # define method of gradient descent for each graph
-ops = []
-ops.append(tf.train.AdadeltaOptimizer(20).minimize(cost[0]))
-ops.append(tf.train.AdagradOptimizer(0.10).minimize(cost[1]))
-ops.append(tf.train.AdamOptimizer(0.05).minimize(cost[2]))
-ops.append(tf.train.FtrlOptimizer(0.05).minimize(cost[3]))
-ops.append(tf.train.GradientDescentOptimizer(0.05).minimize(cost[4]))
-ops.append(tf.train.MomentumOptimizer(0.01, 0.95).minimize(cost[5]))
-ops.append(tf.train.RMSPropOptimizer(0.03).minimize(cost[6]))
+ops_param = [['Adadelta', 10.0],
+             ['Adagrad', 0.10],
+             ['Adam', 0.05],
+             ['Ftrl', 0.05],
+             ['GD', 0.05],
+             ['Momentum', 0.01],
+             ['RMSProp', 0.02]]
 
-ops_label = ["Adadelta",
-             "Adagrad",
-             "Adam",
-             "Ftrl",
-             "GD",
-             "Momentum",
-             "RMSProp"]
+ops = []
+ops.append(tf.train.AdadeltaOptimizer(ops_param[0][1]).minimize(cost[0]))
+ops.append(tf.train.AdagradOptimizer(ops_param[1][1]).minimize(cost[1]))
+ops.append(tf.train.AdamOptimizer(ops_param[2][1]).minimize(cost[2]))
+ops.append(tf.train.FtrlOptimizer(ops_param[3][1]).minimize(cost[3]))
+ops.append(tf.train.GradientDescentOptimizer(ops_param[4][1]).minimize(cost[4]))
+ops.append(tf.train.MomentumOptimizer(ops_param[5][1], momentum=0.95).minimize(cost[5]))
+ops.append(tf.train.RMSPropOptimizer(ops_param[6][1]).minimize(cost[6]))
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -107,16 +107,16 @@ with tf.Session() as sess:
 
             if last_point[i]:
                 last_point[i].remove()
-            last_point[i] = plt.scatter(x_val, y_val, color=colors[i], s=3, label=ops_label[i])
+            last_point[i] = plt.scatter(x_val, y_val, color=colors[i], s=3, label=ops_param[i][0])
 
             if last_x[i] and last_y[i]:
                 plt.plot([last_x[i], x_val], [last_y[i], y_val], color=colors[i], linewidth=0.5)
             last_x[i] = x_val
             last_y[i] = y_val
 
-        plt.legend(last_point, ops_label)
-        plt.savefig("figures/" + str(iter) + '.png')
-        print(iter)
+        plt.legend(last_point, ops_param)
+        plt.savefig('figures/' + str(iter) + '.png')
+        print('iteration: {}'.format(iter))
         plt.pause(0.001)
 
 print("done")
