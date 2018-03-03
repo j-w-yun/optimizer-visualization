@@ -23,10 +23,11 @@ For an overview of each gradient descent optimization algorithms, visit [this he
 #### Numbers in figure legend indicate learning rate, specific to each Optimizer.
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie5.gif)
 
-#### A sharp gaussian depression at x=0, y=0. Note the optimizers' behavior when gradient is steep.
+#### Note the optimizers' behavior when gradient is steep.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie7.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie6.gif)
 
-## Additional Figures
+<!-- ## Additional Figures
 
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie3.gif)
 
@@ -82,10 +83,11 @@ For an overview of each gradient descent optimization algorithms, visit [this he
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/ProximalGDOp.png)
 
 #### RMSPropOptimizer(learning_rate=0.5)
-![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/RMSPropOp.png)
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/RMSPropOp.png) -->
 
 
 
-#### Inspired by the following GIFs I found on the web:
+#### Inspired by the following GIFs:
 ![](https://i.stack.imgur.com/qAx2i.gif)
 ![](https://i.stack.imgur.com/1obtV.gif)
+[From here](http://ruder.io/optimizing-gradient-descent/)

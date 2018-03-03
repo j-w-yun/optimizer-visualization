@@ -6,8 +6,15 @@ import tensorflow as tf
 # cost function
 def cost_func(x=None, y=None):
     '''Cost function.
-    For visualizing contour plot, call f() and collect placeholder nodes.
+    For visualizing contour plot, call f() and collect placeholder nodes for fast GPU calc.
     To incorporate variables to optimize, pass them in as argument to attach as x and y.
+
+    Args:
+        x: None if placeholder tensor is used as input. Specify x to use x as input tensor.
+        y: None if placeholder tensor is used as input. Specify y to use y as input tensor.
+
+    Returns:
+        Tuple (x, y, z) where x and y are input tensors and z is output tensor.
     '''
     if not x:
         x = tf.placeholder(tf.float32, shape=[None, 1])
@@ -20,18 +27,23 @@ def cost_func(x=None, y=None):
     # 3rd local minimum at (-0.5, -0.8)
     z -= __f2(x, y, x_mean=-0.5, y_mean=-0.8, x_sig=0.35, y_sig=0.35)
 
-    # steep gaussian at (0, 0)
-    z -= __f2(x, y, x_mean=0, y_mean=0, x_sig=0.2, y_sig=0.2)
+    # one steep gaussian trench at (0, 0)
+#     z -= __f2(x, y, x_mean=0, y_mean=0, x_sig=0.2, y_sig=0.2)
+
+    # three steep gaussian trenches
+    z -= __f2(x, y, x_mean=1.0, y_mean=-0.5, x_sig=0.2, y_sig=0.2)
+    z -= __f2(x, y, x_mean=-1.0, y_mean=0.5, x_sig=0.2, y_sig=0.2)
+    z -= __f2(x, y, x_mean=-0.5, y_mean=-0.8, x_sig=0.2, y_sig=0.2)
 
     return x, y, z
 
 
-# hills and bumps of the cost function
+# noisy hills of the cost function
 def __f1(x, y):
     return -1 * tf.sin(x * x) * tf.cos(3 * y * y) * tf.exp(-(x * y) * (x * y)) - tf.exp(-(x + y) * (x + y))
 
 
-# bivar gaussian
+# bivar gaussian hills of the cost function
 def __f2(x, y, x_mean, y_mean, x_sig, y_sig):
     normalizing = 1 / (2 * np.pi * x_sig * y_sig)
     x_exp = (-1 * tf.square(x - x_mean)) / (2 * tf.square(x_sig))
@@ -82,7 +94,7 @@ for i in range(7):
 ops_param = [['Adadelta', 50],
              ['Adagrad', 0.10],
              ['Adam', 0.05],
-             ['Ftrl', 0.05],
+             ['Ftrl', 0.5],
              ['GD', 0.05],
              ['Momentum', 0.01],
              ['RMSProp', 0.02]]
@@ -99,29 +111,36 @@ ops.append(tf.train.RMSPropOptimizer(ops_param[6][1]).minimize(cost[6]))
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    last_x = []
-    last_y = []
-    last_point = []
+    # use last location to draw a line to the current location
+    last_x, last_y = [], []
+    plot_cache = []
     for i in range(7):
         last_x.append(x_i)
         last_y.append(y_i)
-        last_point.append(None)
+        plot_cache.append(None)
 
-    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
-    for iter in range(1000):
+    # available colors for each label
+    colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
+
+    # loop each step of the optimization algorithm
+    steps = 1000
+    for iter in range(steps):
         for i, op in enumerate(ops):
+            # run a step of optimization and collect new x and y variable values
             _, x_val, y_val = sess.run([op, x_var[i], y_var[i]])
 
-            if last_point[i]:
-                last_point[i].remove()
-            last_point[i] = plt.scatter(x_val, y_val, color=colors[i], s=3, label=ops_param[i][0])
+            # move dot to the current value
+            if plot_cache[i]:
+                plot_cache[i].remove()
+            plot_cache[i] = plt.scatter(x_val, y_val, color=colors[i], s=3, label=ops_param[i][0])
 
+            # draw a line from the previous value
             if last_x[i] and last_y[i]:
                 plt.plot([last_x[i], x_val], [last_y[i], y_val], color=colors[i], linewidth=0.5)
             last_x[i] = x_val
             last_y[i] = y_val
 
-        plt.legend(last_point, ops_param)
+        plt.legend(plot_cache, ops_param)
         plt.savefig('figures/' + str(iter) + '.png')
         print('iteration: {}'.format(iter))
         plt.pause(0.001)
