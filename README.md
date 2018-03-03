@@ -2,8 +2,6 @@
 
 ## Visualize gradient descent optimization algorithms in Tensorflow.
 
-For an overview of each gradient descent optimization algorithm, [visit this helpful resource](http://ruder.io/optimizing-gradient-descent/).
-
 All methods start at the same location, specified by two variables. Both x and y variables are improved by the following Optimizers:
 
 [Adadelta documentation](https://www.tensorflow.org/api_docs/python/tf/train/AdadeltaOptimizer)
