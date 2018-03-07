@@ -21,13 +21,17 @@ All methods start at the same location, specified by two variables. Both x and y
 For an overview of each gradient descent optimization algorithms, visit [this helpful resource](http://ruder.io/optimizing-gradient-descent/).
 
 #### Numbers in figure legend indicate learning rate, specific to each Optimizer.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie11.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie5.gif)
 
 #### Note the optimizers' behavior when gradient is steep.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie9.gif)
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie10.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie7.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie6.gif)
 
 #### Note the optimizers' behavior when initial gradient is miniscule.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie12.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie8.gif)
 
 <!-- ## Additional Figures
