@@ -27,6 +27,9 @@ For an overview of each gradient descent optimization algorithms, visit [this he
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie7.gif)
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie6.gif)
 
+#### Note the optimizers' behavior when initial gradient is miniscule.
+![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie8.gif)
+
 <!-- ## Additional Figures
 
 ![](https://github.com/Jaewan-Yun/optimizer-visualization/blob/master/figures/movie3.gif)
